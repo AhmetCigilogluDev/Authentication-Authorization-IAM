@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Authentication&amp;Authorization Platform - IAM.props" />
+</Project>
