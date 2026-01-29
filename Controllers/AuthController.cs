@@ -4,6 +4,7 @@
     using Authentication_Authorization_Platform___IAM.Services;
   
     using Microsoft.AspNetCore.Mvc;
+    using System.Net.WebSockets;
 
     [ApiController]
     [Route("api/auth")]
@@ -26,6 +27,16 @@
 
             // Token dönüyorsan 200 OK genelde daha pratik, "Created" da olabilir.
             return Ok(result);
+        }
+
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest req)
+        {
+
+            var result = await _auth.LoginAsync(req);
+           if (!result.Success) return Unauthorized(result);
+           return Ok(result);
         }
     }
 }

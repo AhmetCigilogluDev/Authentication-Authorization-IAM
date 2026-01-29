@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "Authentication_Authorization_Platform___IAM.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/auth/Login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "req",
+        "Type": "Authentication_Authorization_Platform___IAM.Models.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Authentication_Authorization_Platform___IAM.Controllers.AuthController",
     "Method": "Register",
     "RelativePath": "api/auth/register",
     "HttpMethod": "POST",
