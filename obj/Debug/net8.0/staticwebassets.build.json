@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "JRixZQWj6IoQLhxu5drwPCaqpHkTAcEKqQ9qPwewKRM=",
+  "Hash": "F+fzqeqS6dOMYl1ZWuQ/9hpxEejv/tdBU5nm3Yd2tJM=",
   "Source": "Authentication&Authorization Platform - IAM",
   "BasePath": "_content/Authentication&Authorization Platform - IAM",
   "Mode": "Default",
@@ -148,6 +148,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\app.js"
+    },
+    {
+      "Identity": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\js\\login.js",
+      "SourceId": "Authentication&Authorization Platform - IAM",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\",
+      "BasePath": "_content/Authentication&Authorization Platform - IAM",
+      "RelativePath": "js/login.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\login.js"
     },
     {
       "Identity": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\js\\site.js",
@@ -1250,6 +1269,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\login.html",
+      "SourceId": "Authentication&Authorization Platform - IAM",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\",
+      "BasePath": "_content/Authentication&Authorization Platform - IAM",
+      "RelativePath": "login.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\login.html"
     }
   ]
 }

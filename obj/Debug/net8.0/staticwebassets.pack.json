@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets\\js\\app.js"
     },
     {
+      "Id": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\js\\login.js",
+      "PackagePath": "staticwebassets\\js\\login.js"
+    },
+    {
       "Id": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
@@ -255,6 +259,10 @@
     {
       "Id": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\AHMET80\\source\\repos\\Authentication&Authorization Platform - IAM\\Authentication&Authorization Platform - IAM\\wwwroot\\login.html",
+      "PackagePath": "staticwebassets\\login.html"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Authentication&Authorization Platform - IAM.Microsoft.AspNetCore.StaticWebAssets.props",
