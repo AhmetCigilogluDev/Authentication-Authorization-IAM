@@ -6,5 +6,6 @@ namespace Authentication_Authorization_Platform___IAM.Services
     {
 
         Task<AuthResponse> RegisterAsync(RegisterRequest req);
+        Task<AuthResponse> LoginAsync(LoginRequest req);
     }
 }
