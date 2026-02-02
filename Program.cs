@@ -1,5 +1,7 @@
 using Authentication_Authorization_Platform___IAM.Data;
+using Authentication_Authorization_Platform___IAM.Data.Infrastructure;
 using Authentication_Authorization_Platform___IAM.Models;
+using Authentication_Authorization_Platform___IAM.Models.Auth;
 using Authentication_Authorization_Platform___IAM.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +13,7 @@ namespace Authentication_Authorization_Platform___IAM
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -63,13 +65,24 @@ namespace Authentication_Authorization_Platform___IAM
             });
 
 
-            builder.Services.AddAuthorization();
+            // Authorization Policies (perm -> policy)
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.DocumentsRead, p => p.RequireClaim("perm", Permissions.DocumentsRead));
+                options.AddPolicy(Policies.DocumentsUpload, p => p.RequireClaim("perm", Permissions.DocumentsUpload));
+                options.AddPolicy(Policies.DocumentsDelete, p => p.RequireClaim("perm", Permissions.DocumentsDelete));
+                options.AddPolicy(Policies.AdminPanel, p => p.RequireRole(Roles.Admin).RequireClaim("perm", Permissions.AdminPanel));
+            });
 
             // Auth Service DI
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
             var app = builder.Build();
+
+
+            // Seed
+            await IdentitySeeder.SeedAsync(app.Services);
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

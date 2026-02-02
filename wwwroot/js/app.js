@@ -122,6 +122,8 @@ form.addEventListener("submit", async (e) => {
 
         if (data.token) {
             localStorage.setItem("token", data.token);
+            window.location.replace("/dashboard.html");
+            return;
         }
 
         // opsiyonel: login sayfasına yönlendir

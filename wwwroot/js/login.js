@@ -100,6 +100,8 @@ form.addEventListener("submit", async (e) => {
 
         if (data.token) {
             localStorage.setItem("token", data.token);
+            window.location.href = "/dashboard.html";
+            return;
         }
 
 
