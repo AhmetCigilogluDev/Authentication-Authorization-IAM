@@ -9,6 +9,6 @@
 
         public string Message { get; set; } = "";
 
-        public string? Token { get; set; }  // if you want to return JWT Token 
+        public string? Token { get; set; }  // to return JWT Token 
     }
 }

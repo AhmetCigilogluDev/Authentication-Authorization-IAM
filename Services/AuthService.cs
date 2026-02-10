@@ -1,9 +1,12 @@
 ﻿namespace Authentication_Authorization_Platform___IAM.Services
 {
     using Authentication_Authorization_Platform___IAM.Models;
-   
+    using System.Security.Claims;
+
     using Microsoft.AspNetCore.Identity;
     using Microsoft.IdentityModel.Tokens;
+    using System.Security;
+    using Authentication_Authorization_Platform___IAM.Models.Auth;
 
     public sealed class AuthService : IAuthService
     {
@@ -60,6 +63,8 @@
 
         public async Task<AuthResponse> RegisterAsync(RegisterRequest req)
         {
+
+           
             // 1) Email unique mi kontrol et.
             var existing = await _userManager.FindByEmailAsync(req.Email);
             if (existing != null)
@@ -90,6 +95,10 @@
             // 5) Kullanıcıya default rol ata.
             await _userManager.AddToRoleAsync(user, defaultRole);
 
+            // Default read permission
+            await _userManager.AddClaimAsync(user, new Claim("perm", Permissions.DocumentsRead));
+                                                        
+             
             // 6) İstersen token üretip response’a koy.
             var token = await _jwt.CreateTokenAsync(user);
 
