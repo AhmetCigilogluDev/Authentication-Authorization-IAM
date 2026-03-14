@@ -15,6 +15,7 @@
         private readonly IConfiguration _config;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        // Making the dependecy injection to pulling the config & userManager object.
         public JwtTokenService(IConfiguration config, UserManager<ApplicationUser> userManager)
         {
             _config = config;
@@ -23,9 +24,16 @@
 
         public async Task<string> CreateTokenAsync(ApplicationUser user)
         {
+            // Pulling the roles from the userManager.
             var roles = await _userManager.GetRolesAsync(user);
 
-            var claims = new List<Claim>
+            // Pulling the user claims from the userManager
+
+            var userClaims = await _userManager.GetClaimsAsync(user);
+
+            // Starting to the PAYLOAD
+
+            var payload = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
@@ -33,22 +41,53 @@
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+            // User roles adding into the Payload
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            payload.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+            // Claims/permissions is adding into the Payload
+
+            payload.AddRange(userClaims);
+
+            // JWT Settings is setting with the _config object
+
+            var jwtKey = _config["Jwt:Key"]!;
+            var jwtIssuer = _config["Jwt:Issuer"];
+            var jwtAudience = _config["Jwt:Audience"];
             var expiresMinutes = int.Parse(_config["Jwt:ExpiresMinutes"] ?? "60");
 
+
+            // Starting to the HEADER
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+
+            // Obtain the JWT OBJECT ---- FINALLY obtaining the jwt payload + config is will be mapping
+
             var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
+
+                issuer: jwtIssuer,
+                audience : jwtAudience,
+                claims: payload,
                 expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
                 signingCredentials: creds
-            );
+
+
+                );
+
+
+            // SIGNATURE -- signing of the JWT OBJECT
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+
+           
+
+           
+            
+
+            
         }
     }
 
