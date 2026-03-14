@@ -2,15 +2,25 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Authentication_Authorization_Platform___IAM.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/admin")]
+    [Authorize(Policy = Policies.AdminPanel)]
     [ApiController]
     public class AdminController : ControllerBase
     {
+
+        private readonly IAdminService _adminService;
+
+
+
+
+
+
         [HttpGet("panel")]
-        [Authorize(Policy = Policies.AdminPanel)]
+      
         public IActionResult Panel() => Ok(new { message = "admin panel ok" });
     }
 }
