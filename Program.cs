@@ -3,6 +3,7 @@ using Authentication_Authorization_Platform___IAM.Data.Infrastructure;
 using Authentication_Authorization_Platform___IAM.Models;
 using Authentication_Authorization_Platform___IAM.Models.Auth;
 using Authentication_Authorization_Platform___IAM.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -77,7 +78,7 @@ namespace Authentication_Authorization_Platform___IAM
             // Auth Service DI
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-
+            builder.Services.AddScoped<IAuthService, AuthService>();
             var app = builder.Build();
 
 
