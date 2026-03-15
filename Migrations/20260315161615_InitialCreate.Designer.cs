@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Authentication_Authorization_Platform___IAM.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260127172051_LastMigration3ForTheConnectingdb")]
-    partial class LastMigration3ForTheConnectingdb
+    [Migration("20260315161615_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

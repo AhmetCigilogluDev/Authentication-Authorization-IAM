@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Authentication_Authorization_Platform___IAM.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityTablesIsCreatedNowRighttt : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
