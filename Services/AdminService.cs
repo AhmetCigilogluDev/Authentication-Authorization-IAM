@@ -4,6 +4,7 @@ using Authentication_Authorization_Platform___IAM.Models.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace Authentication_Authorization_Platform___IAM.Services
 {
@@ -11,11 +12,11 @@ namespace Authentication_Authorization_Platform___IAM.Services
     {
 
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationUser> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _db;
 
         // Making The Dependency Injection with the userManager object
-        public AdminService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationUser> roleManager,
+        public AdminService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
                             AppDbContext db)
         {
             _userManager = userManager;
@@ -62,7 +63,7 @@ namespace Authentication_Authorization_Platform___IAM.Services
 
         }
 
-        async Task<AdminActionResultDto> IAdminService.AssignRoleAsync(string actorUserId, string actorEmail, AssignRoleRequest request)
+         async Task<AdminActionResultDto> IAdminService.AssignRoleAsync(string actorUserId, string actorEmail, AssignRoleRequest request)
         {
             // Find the user to give role
             var user = await _userManager.FindByIdAsync(request.UserId);
@@ -111,7 +112,7 @@ namespace Authentication_Authorization_Platform___IAM.Services
 
 
 
-        async Task<AdminActionResultDto> IAdminService.RemoveRoleAsync(string actorUserId, string actorEmail, RemoveRoleRequest request)
+         async Task<AdminActionResultDto> IAdminService.RemoveRoleAsync(string actorUserId, string actorEmail, RemoveRoleRequest request)
         {
             // finding user to remove the role
             var user = await _userManager.FindByIdAsync(request.UserId);
@@ -159,17 +160,102 @@ namespace Authentication_Authorization_Platform___IAM.Services
 
 
 
-        Task<AdminActionResultDto> IAdminService.AddPermissionAsync(string actorUserId, string actorEmail, AddPermissionRequest request)
+        async Task<AdminActionResultDto> IAdminService.AddPermissionAsync(string actorUserId, string actorEmail, AddPermissionRequest request)
         {
-            // finding the user to give permission
+            //find the user
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user is null)
+                return Fail("The target user didn't find it");
+
+
+
+            //get the user claim
+            var claims = await _userManager.GetClaimsAsync(user);
+        
+
+            //check! does the user have this permissions
+            var havePermission = claims.Any(c => c.Type == "perm" && c.Value == request.Permission);
+            if (havePermission)
+                return Fail("User is already has this permission");
+
+            // new permission claim is adding
+            var result = await _userManager.AddClaimAsync(user, new Claim("perm", request.Permission));
+            if (!result.Succeeded)
+                return Fail(string.Join("|", result.Errors.Select(e => e.Description)));
+
+            //All operation will writing in to the auditin log
+            var auditLog = new AuditLog
+            {
+                ActorUserId = actorUserId,
+                ActorEmail = actorEmail,
+                TargetUserId = user.Id,
+                TargetEmail = user.Email,
+                ActionType = "AddPermission",
+                Detail = $"Role Removed: {request.Permission}",
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+
+            // persist to the db
+            _db.AuditLogs.Add(auditLog);
+            await _db.SaveChangesAsync();
+
+            // returning to the real world with dto
+            return Success("Permission has been added", reloginRequired: true);
+
+
+
 
         }
 
-     
 
-        Task<AdminActionResultDto> IAdminService.RemovePermissionAsync(string actorUserId, string actorEmail, RemoveRoleRequest request)
+
+        async Task<AdminActionResultDto> IAdminService.RemovePermissionAsync(string actorUserId, string actorEmail, RemovePermissionRequest request)
         {
-            throw new NotImplementedException();
+            //find the user
+            var user = await _userManager.FindByIdAsync(request.UserId);
+            if (user is null)
+                return Fail("This user is not finding");
+
+            // Get the user claims
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            // Find the permission
+            var permissionClaim = claims.FirstOrDefault(c => c.Type == "perm" && c.Value == request.Permission);
+            if (permissionClaim is null)
+                return Fail("User has not this permission");
+            // permission is removing from the user
+            var result = await _userManager.RemoveClaimAsync(user, permissionClaim);
+
+            if (!result.Succeeded)
+                return Fail(string.Join("|", result.Errors.Select(e => e.Description)));
+
+
+
+            var auditLog = new AuditLog
+            {
+                ActorUserId = actorUserId,
+                ActorEmail = actorEmail,
+                TargetUserId = user.Id,
+                TargetEmail = user.Email,
+                ActionType = "RemovePermission",
+                Detail = $"Role Permission: {request.Permission}",
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+
+
+            // persist to the db
+            _db.AuditLogs.Add(auditLog);
+            await _db.SaveChangesAsync();
+
+            // returning to the real world with dto
+            return Success("Permission has been removed", reloginRequired: true);
+
+
+
+
+
         }
 
 
