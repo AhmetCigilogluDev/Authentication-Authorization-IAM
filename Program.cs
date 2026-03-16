@@ -39,6 +39,7 @@ namespace Authentication_Authorization_Platform___IAM
                     opt.Password.RequiredLength = 6;
                 })
                 .AddRoles<IdentityRole>()
+                .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddSignInManager();
 
@@ -77,6 +78,7 @@ namespace Authentication_Authorization_Platform___IAM
             // Auth Service DI
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
 
             var app = builder.Build();
 

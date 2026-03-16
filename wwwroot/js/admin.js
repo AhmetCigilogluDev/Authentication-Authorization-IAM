@@ -18,6 +18,11 @@ async function loadUsers() {
             }
         });
 
+        console.log("STATUS:", res.status);
+
+        const rawText = await res.text();
+        console.log("RAW RESPONSE:", rawText);
+
         if (res.status === 401) {
             alert("Oturum geçersiz veya süresi dolmuş. Lütfen tekrar giriş yapın.");
             localStorage.removeItem("token");
@@ -35,8 +40,7 @@ async function loadUsers() {
             return;
         }
 
-        const users = await res.json();
-        console.log("Admin Users:", users);
+        const users = JSON.parse(rawText);
 
         const tbody = document.getElementById("usersBody");
         tbody.innerHTML = "";
@@ -56,7 +60,7 @@ async function loadUsers() {
         });
 
     } catch (error) {
-        console.error(error);
+        console.error("LOAD USERS ERROR:", error);
         alert("API erişim hatası.");
     }
 }
