@@ -2,5 +2,7 @@
 {
     public class AddPermissionRequest
     {
+        public string UserId { get; set; } = default!;
+        public string Permission { get; set; } = default!;
     }
 }
