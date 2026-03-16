@@ -62,47 +62,6 @@ namespace Authentication_Authorization_Platform___IAM.Services
 
         }
 
-
-        async Task<AdminActionResultDto> IAdminService.RemoveRoleAsync(string actorUserId, string actorEmail, RemoveRoleRequest request)
-        {
-            // finding user to remove the role
-            var user = await _userManager.FindByIdAsync(request.UserId);
-
-            if (user is null)
-                return Fail("target user didn't find");
-
-            // check user already has the role?
-            var isInRole = await _userManager.IsInRoleAsync(user, request.Role);
-
-            if (isInRole)
-                return Fail("Target user already has this role");
-
-
-            // rol has removed from the user
-            var result = await _userManager.RemoveFromRoleAsync(user, request.Role);
-
-            if(!result.Succeeded)
-                return Fail(string.Join("|", result.Errors.Select(e => e.Description)));
-
-            // All operation is writing onto the AuditLog
-            var auditLog = new AuditLog
-            {
-                ActorUserId = actorUserId,
-                ActorEmail = actorEmail,
-                TargetUserId = user.Id,
-                TargetEmail = user.Email,
-                ActionType = "RemoveRole",
-                Detail = ${ "Role Removed:{ request.Role} " };
-            }
-
-
-
-
-
-
-        }
-
-
         async Task<AdminActionResultDto> IAdminService.AssignRoleAsync(string actorUserId, string actorEmail, AssignRoleRequest request)
         {
             // Find the user to give role
@@ -149,6 +108,56 @@ namespace Authentication_Authorization_Platform___IAM.Services
 
 
         }
+
+
+
+        async Task<AdminActionResultDto> IAdminService.RemoveRoleAsync(string actorUserId, string actorEmail, RemoveRoleRequest request)
+        {
+            // finding user to remove the role
+            var user = await _userManager.FindByIdAsync(request.UserId);
+
+            if (user is null)
+                return Fail("target user didn't find");
+
+            // check user already has the role?
+            var isInRole = await _userManager.IsInRoleAsync(user, request.Role);
+
+            if (isInRole)
+                return Fail("Target user already has this role");
+
+
+            // rol has removed from the user
+            var result = await _userManager.RemoveFromRoleAsync(user, request.Role);
+
+            if(!result.Succeeded)
+                return Fail(string.Join("|", result.Errors.Select(e => e.Description)));
+
+            // All operation is writing onto the AuditLog
+            var auditLog = new AuditLog
+            {
+                ActorUserId = actorUserId,
+                ActorEmail = actorEmail,
+                TargetUserId = user.Id,
+                TargetEmail = user.Email,
+                ActionType = "RemoveRole",
+                Detail = $"Role Removed: {request.Role}",
+                CreatedAtUtc = DateTime.UtcNow
+            };
+
+
+            // persist to the db
+            _db.AuditLogs.Add(auditLog);
+            await _db.SaveChangesAsync();
+
+            // returning to the real world with dto
+            return Success("Rol has been succesfully removed", reloginRequired: true);
+
+
+
+
+        }
+
+
 
         Task<AdminActionResultDto> IAdminService.AddPermissionAsync(string actorUserId, string actorEmail, AddPermissionRequest request)
         {
